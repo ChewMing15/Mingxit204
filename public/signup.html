@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1> This is the sign up page</h1>
+
+        <div id='SignUp_Usrname'>
+            <h3>Username: </h3>
+            <input type="text" id="SU_username">
+        </div>
+
+        <div id='SignUp_Pword'>
+            <br>
+            <h3>Password: </h3>
+            <input type="text" id="SU_password">
+        </div>
+
+        <br>
+        <button id='SignUp_submit'>Sign Up</button>
+        <button id='backtoLogIn' onclick="window.location.href = '/index.html';">Log In</button>
+
+
+    <script>
+
+        document.getElementById('SignUp_submit').addEventListener('click', async () => {
+
+            const SUuser = document.getElementById('SU_username').value;
+            const SUpass = document.getElementById('SU_password').value;
+            var SU_cred = { SUuser, SUpass }
+            
+            const options = {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(SU_cred)
+
+            }
+
+            var SignUp = await fetch(`/signUp`, options);
+            var SignUp_cred = await SignUp.json();
+
+            alert(SignUp_cred.status);
+
+            if(SignUp_cred.status == 1){
+                sucess_goToIndex();
+            }
+            
+        });
+
+        function sucess_goToIndex() {
+            window.location.replace('/index.html');
+        }
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1> Page 2</h1>
+    <button id='logout' onclick= "window.location.href = '/index.html';">LOGOUT</button>
+    <a href='page1.html'>Page 1</a> |
+    <a href='page2.html'>Page 2 (for admin)</a>
+    <br>
+    <button onclick="refreshDatabase()">View Database</button>
+    <br>
+    Target: <input type='text' id='targetID' placeholder='Enter Target ID'>
+    <br>
+    Enter Change Type: 
+    <input type='text' id='changeType' placeholder="Type (if any)">
+    <br>
+    Enter Change: 
+    <input type='text' id='changes' placeholder="Changes (if any)"> <br>
+    <button onclick="editDabatase()">EDIT</button>
+
+
+<script>
+
+    async function refreshDatabase() {
+        const getDatabase_data = await fetch('/getDatabase');
+        const getDatabase = await getDatabase_data.json();
+        // Alternate way to enter data
+        // for (item of getDatabase) {
+        //     const master = document.createElement('p');
+        //     const a = document.createElement('div')
+
+        //     a.textContent = `user: ${item.SUuser}, pass:${item.SUpass}, grade:${item.grade}`;
+
+        //     master.append(a);
+        //     document.body.append(master);
+        // }
+        const master = document.createElement('table');
+        document.body.append(master);
+
+        const master2 = document.querySelector('table').setAttribute('id', 'databaseTable');
+
+        //const a = document.createElement('div')
+        const master3 = document.getElementById('databaseTable');
+        
+        var row = master3.insertRow();
+        var count = 0;
+        
+        row.insertCell().innerHTML = 'ID';
+        row.insertCell().innerHTML = 'Username';
+        row.insertCell().innerHTML = 'Password';
+        row.insertCell().innerHTML = 'Admin Right';
+
+        for (item of getDatabase) {
+        
+            row = master3.insertRow();
+            row.insertCell().innerHTML = 'ID-' + count;
+            row.insertCell().innerHTML = item.SUuser;
+            row.insertCell().innerHTML = item.SUpass;
+            row.insertCell().innerHTML = item.grade
+            count = count + 1;
+                
+        }
+    }
+
+    async function editDabatase() {
+        const target_user = document.getElementById('targetID').value
+        const change_type = document.getElementById('changeType').value;
+        const change_val = document.getElementById('changes').value;
+        
+        const rowID = target_user.substring(3,4);
+
+        //console.log(rowID);
+        const getTable = document.getElementById('databaseTable');
+
+        var getOriUser = getTable.rows[rowID].cells[1].innerHTML;
+        var getOriPass = getTable.rows[rowID].cells[2].innerHTML;
+        var getOriGrade = getTable.rows[rowID].cells[3].innerHTML;
+
+        console.log('getOriUser: ' + getOriUser);
+        console.log('getOriPass: ' + getOriPass);
+        console.log('getOriGrade: '+ getOriGrade);
+
+        change_data = {getOriUser, getOriPass, getOriGrade, target_user, change_type, change_val};
+
+        console.log(change_data);
+
+        const options = {
+            method : 'POST',
+            headers : {'Content-Type': 'application/json'},
+            body : JSON.stringify(change_data)
+        }
+
+        const makechanges_data = await fetch('/changerequest', options);
+        const changes_made = await makechanges_data.json();
+
+        console.log(changes_made);
+    }
+
+</script>
+</body>
+</html>

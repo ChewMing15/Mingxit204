@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Hello World</h1>
+<!-- 
+    <form id='Login_Page'>
+         -->
+        <div id='Usrname'>
+            <h3>Username: </h3>
+            <input type="text" id="username">
+        </div>
+
+        <div id='Pword'>
+            <br>
+            <h3>Password: </h3>
+            <input type="text" id="password">
+        </div>
+
+        <br>
+        <button id='submit'>Login</button>
+        <button id='signup' onclick="goToSignUp()">Sign Up</button>
+
+    <script> 
+
+    function goToSignUp() {
+        var SignUpLink = document.createElement('a');
+        SignUpLink.href = '/signup.html';
+
+        SignUpLink.click();
+    }
+
+    document.getElementById('submit').addEventListener('click', async () => {
+
+        var login_pass = document.getElementById('password').value;
+        var login_user = document.getElementById('username').value;
+        
+        login_cred = { login_pass, login_user };
+        
+        const options = {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(login_cred)
+
+            }
+
+        var LogIn = await fetch(`/LogIn`, options);
+        var LogIn_cred = await LogIn.json();
+        
+        if (LogIn_cred.status == 'clear') {
+            alert("You are a " + LogIn_cred.grade + " user!")
+
+            sessionStorage.setItem('user_cred', JSON.stringify(LogIn_cred));
+            
+            var entry = document.createElement('a');
+            entry.href = '/page1.html'
+            entry.click();
+        } else {
+            alert('something wrong')
+        }
+    });
+    
+    
+
+    </script>
+</body>
+</html>
