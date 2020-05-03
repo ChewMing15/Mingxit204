@@ -85,32 +85,43 @@ app.post(`/changerequest`, async (request, response) => {
         
         if(docs.length == 1) {
 
-            if (VO_type == 'username') {
-               
-                database.update({SUuser: VO_user, SUpass: VO_pass}, {$set: {grade: VO_val}}, {}, (err, numReplaced) => {
-                    console.log('numreplaced:  ' + numReplaced);
-                });
-                
-            } else if (VO_type == 'password') {
+            if (VO_type == 'delete') {
 
-                database.update({SUuser: VO_user, SUpass: VO_pass}, {$set: {grade: VO_val}}, {}, (err, numReplaced) => {
-                    console.log('numreplaced:  ' + numReplaced);
+                database.remove({SUuser: VO_user, SUpass: VO_pass}, {}, (err, numRemoved) => {
+                    console.log(numRemoved);
                 });
 
-            } else if (VO_type == 'grade') {
-
-                database.update({SUuser: VO_user, SUpass: VO_pass}, {$set: {grade: VO_val}}, {}, (err, numReplaced) => {
-                    console.log('numreplaced:  ' + numReplaced);
-                });
-            }
+                response.json({status: 'Deleted'});
             
+            } else {
 
-            response.json({
-                Status: 'Update Successful',
-                new_username: docs[0].SUuser,
-                new_password: docs[0].SUpass,
-                new_grade: docs[0].grade
-            });
+                if (VO_type == 'username') {
+                
+                    database.update({SUuser: VO_user, SUpass: VO_pass}, {$set: {grade: VO_val}}, {}, (err, numReplaced) => {
+                        console.log('numreplaced:  ' + numReplaced);
+                    });
+                    
+                } else if (VO_type == 'password') {
+
+                    database.update({SUuser: VO_user, SUpass: VO_pass}, {$set: {grade: VO_val}}, {}, (err, numReplaced) => {
+                        console.log('numreplaced:  ' + numReplaced);
+                    });
+
+                } else if (VO_type == 'grade') {
+
+                    database.update({SUuser: VO_user, SUpass: VO_pass}, {$set: {grade: VO_val}}, {}, (err, numReplaced) => {
+                        console.log('numreplaced:  ' + numReplaced);
+                    });
+                }
+            
+                response.json({
+                    status: 'Update Successful',
+                    new_username: docs[0].SUuser,
+                    new_password: docs[0].SUpass,
+                    new_grade: docs[0].grade
+                });
+
+            }
 
         } else {
             response.json({status: "something went wrong, please check"});

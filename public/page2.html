@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles.css">
     <title>Document</title>
 </head>
 <body>
@@ -13,14 +14,14 @@
     <br>
     <button onclick="refreshDatabase()">View Database</button>
     <br>
-    Target: <input type='text' id='targetID' placeholder='Enter Target ID'>
+    Target: <input type='text' id='targetID' placeholder='Enter ID number (ie. 1)'>
     <br>
     Enter Change Type: 
-    <input type='text' id='changeType' placeholder="Type (if any)">
+    <input type='text' id='changeType' placeholder="Type (username, password, or grade)">
     <br>
     Enter Change: 
-    <input type='text' id='changes' placeholder="Changes (if any)"> <br>
-    <button onclick="editDabatase()">EDIT</button>
+    <input type='text' id='changes' placeholder="Changes"> <br>
+    <button onclick="editDabatase()">EDIT & REFRESH</button>
 
 
 <script>
@@ -57,28 +58,44 @@
         for (item of getDatabase) {
         
             row = master3.insertRow();
-            row.insertCell().innerHTML = 'ID-' + count;
+
+            row.insertCell().innerHTML = count+1;
             row.insertCell().innerHTML = item.SUuser;
             row.insertCell().innerHTML = item.SUpass;
             row.insertCell().innerHTML = item.grade
             count = count + 1;
                 
         }
+
+        document.getElementById('databaseTable').classList.add('prettytable');
     }
 
-    async function editDabatase() {
+    function editDabatase() {
+
+        if(document.getElementById('databaseTable') == null) {
+            refreshDatabase();
+        }
+
+        goEdit();
+        document.getElementById('databaseTable').remove('.databaseTable');
+        refreshDatabase();
+    }
+
+    async function goEdit() {
         const target_user = document.getElementById('targetID').value
         const change_type = document.getElementById('changeType').value;
         const change_val = document.getElementById('changes').value;
         
-        const rowID = target_user.substring(3,4);
+        if(change_val == null) {
+            change_val = 'xxx';
+        }
 
-        //console.log(rowID);
+        console.log(target_user)
         const getTable = document.getElementById('databaseTable');
 
-        var getOriUser = getTable.rows[rowID].cells[1].innerHTML;
-        var getOriPass = getTable.rows[rowID].cells[2].innerHTML;
-        var getOriGrade = getTable.rows[rowID].cells[3].innerHTML;
+        var getOriUser = getTable.rows[target_user].cells[1].innerHTML;
+        var getOriPass = getTable.rows[target_user].cells[2].innerHTML;
+        var getOriGrade = getTable.rows[target_user].cells[3].innerHTML;
 
         console.log('getOriUser: ' + getOriUser);
         console.log('getOriPass: ' + getOriPass);
@@ -98,6 +115,10 @@
         const changes_made = await makechanges_data.json();
 
         console.log(changes_made);
+
+        if (changes_made.status == 'Deleted') {
+            alert('Entry deleted');
+        }
     }
 
 </script>

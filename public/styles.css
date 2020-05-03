@@ -1,0 +1,28 @@
+.prettytable {
+    border: 1px solid #1C6EA4;
+    background-color: #EEEEEE;
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+  }
+  .prettytable td, .prettytable th {
+    border: 1px solid #AAAAAA;
+    padding: 3px 2px;
+  }
+  
+  .prettytable tr:nth-child(1) {
+    font-weight: bold;
+  }
+  
+  .prettytable tbody td {
+    font-size: 13px;
+  }
+
+  .prettytable tr:nth-child(even) {
+    background: #D0E4F5;
+  }
+
+  .prettytable tr:first-child {
+    background: blue;
+    color: white
+  }
