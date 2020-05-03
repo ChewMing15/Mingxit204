@@ -17,7 +17,13 @@
     Target: <input type='text' id='targetID' placeholder='Enter ID number (ie. 1)'>
     <br>
     Enter Change Type: 
-    <input type='text' id='changeType' placeholder="Type (username, password, or grade)">
+    <select id='changeType'> 
+        <option value = 'username'>Username</option>
+        <option value = 'password'>Password</option>
+        <option value = 'grade'>Grade</option>
+        <option value = 'delete'>Delete</option>
+    </select>
+    <!-- <input type='text' id='changeType' placeholder="Type (username, password, or grade)"> -->
     <br>
     Enter Change: 
     <input type='text' id='changes' placeholder="Changes"> <br>
@@ -86,6 +92,7 @@
         const change_type = document.getElementById('changeType').value;
         const change_val = document.getElementById('changes').value;
         
+        console.log('action = ' + change_type);
         if(change_val == null) {
             change_val = 'xxx';
         }

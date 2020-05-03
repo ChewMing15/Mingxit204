@@ -26,3 +26,138 @@
     background: blue;
     color: white
   }
+
+  h1 {
+    text-align: center;
+    justify-content: center;
+    color: white;
+    font-size: 50px;
+    letter-spacing: 0.3em;
+  }
+
+  #group1 {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: flex-start;
+    position: fixed;
+    top: 50%;
+    left: 50%; 
+    transform: translate(-50%, -50%);
+    border-style: double;
+    border-width: 2px;
+    border-color: white;
+    padding-left : 250px;
+    padding-right: 250px;
+    padding-bottom: 20px;
+    color: white;
+  }
+
+  #index {
+    background-image: url('bg.jpg');
+  }
+
+  #signup_page {
+    background-image: url('bg.jpg');
+  }
+
+  #Usrname h3{
+    font-size: 20px;
+    letter-spacing: 0.1em;
+    margin-bottom: 3px;
+    margin-top: 20px;
+  }
+
+  #Pword h3{
+    font-size: 20px;
+    letter-spacing: 0.1em;
+    margin-bottom: 3px;
+  }
+
+  #group2 {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: flex-start;
+    position: fixed;
+    top: 50%;
+    left: 50%; 
+    transform: translate(-50%, -50%);
+    border-style: double;
+    border-width: 2px;
+    border-color: white;
+    padding-left : 250px;
+    padding-right: 250px;
+    padding-bottom: 20px;
+    color: white;
+  }
+
+  #submit {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  #signup {
+    padding-left: 10px;
+    padding-right: 10 px;
+  }
+
+  #SignUp_Usrname h3{
+    font-size: 20px;
+    letter-spacing: 0.1em;
+    margin-bottom: 3px;
+    margin-top: 20px;
+  }
+
+  #SignUp_Pword h3{
+    font-size: 20px;
+    letter-spacing: 0.1em;
+    margin-bottom: 3px;
+  }
+
+  #SignUp_submit {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  #backtoLogIn {
+    /* background-color: grey; */
+    padding-left: 10px;
+    padding-right: 10 px;
+    /* border-color: grey; */
+  }
+
+  #page1 {
+    background-color: hotpink;
+  }
+
+  #h1tag {
+    
+    border-style: none none solid none;
+    border-color: black;
+    border-width: 2px;
+    font-size: 20px;
+    height: 80px;
+    display: flex;
+    align-items: baseline;
+ 
+  }
+
+  #h1tag p {
+    margin-bottom: 2px;
+    flex-grow: 2;
+    font-size: 30px;  
+  }
+
+  #h1tag a {
+    font-size: 15px;
+    padding-right: 10px;
+  }
+
+  #under_construction {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: x-large;
+  }

@@ -4,12 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="../styles.css">
 </head>
-<body>
-    <h1>Rich Ming</h1>
-    <button id='logout' onclick= "window.location.href = '/index.html';">LOGOUT</button>
-    <a href='page1.html'>Page 1</a> |
-    <button onclick="check_status()">Page 2 (for admin)</button>
+<body id = 'page1'>
+    <div id='h1tag'>
+        <p>Rich Ming</p>
+
+        <a href='page1.html'>Page 1 </a>
+        
+        <button onclick="check_status()"> Admin </button>
+
+        <button id='logout' onclick= "window.location.href = '/index.html';">LOGOUT</button>
+    </div>
+
+    <div id = 'under_construction'>
+        Page is under construction
+    </div>
   
 
 </body>
