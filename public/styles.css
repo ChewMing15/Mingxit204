@@ -154,10 +154,53 @@
     padding-right: 10px;
   }
 
-  #under_construction {
+  /* #under_construction {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     font-size: x-large;
+  } */
+
+  #page2 {
+    background-color: whitesmoke;
   }
+
+  #p2tag {
+    
+    border-style: none none solid none;
+    border-color: black;
+    border-width: 2px;
+    font-size: 20px;
+    height: 80px;
+    display: flex;
+    align-items: baseline;
+ 
+  }
+
+  #p2tag p {
+    margin-bottom: 2px;
+    flex-grow: 2;
+    font-size: 30px;  
+  }
+
+  #p2tag a {
+    font-size: 15px;
+    padding-right: 10px;
+  }
+
+  #getdatabase {
+    font-size: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    background-color: tomato;
+    color: white
+  }
+
+  #editnrefresh {
+    margin-bottom: 15px;
+  }
+
+

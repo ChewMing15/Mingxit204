@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body id='crmpage'>
+    <h1> This is the CRM page</h1>
+
+    <button id='addItem' onclick='addfield()'>ADD</button>
+    <button id='deleteItem' onclick='deleteItem()'>DELETE</button>
+
+    <input id='picfile' type='file' alt='Image Preview'>
+    <img id='showpic'>
+
+    <script>
+
+        function addfield() {
+            const master = document.createElement('div');
+            const master1 = document.createElement('input');
+            const master2 = document.createElement('input');
+            const master3 = document.createElement('input');
+            const master4 = document.createElement('input');
+            const img1 = document.createElement('img')
+            const div = document.createElement('div');
+            const submit_btn = document.createElement('button');
+
+            var masters = [master1, master2, master3];
+            var master_id = ['itemname', 'item_description', 'price'];
+            var master_placeholder = ['name', 'description', 'price'];
+            var master_type = ['text', 'text', 'number'];
+
+            var count = 0;
+
+            for (m of masters) {
+                Object.assign(m, {
+                    id: master_id[count],
+                    placeholder: master_placeholder[count],
+                    type: master_type[count]
+                });
+                count = count + 1;
+            }
+
+            Object.assign(master, {
+                id: 'master_div'
+            });
+
+            Object.assign(submit_btn, {
+                id: 'submitbutton',
+            });
+
+            Object.assign(master4, {
+                id: 'picfile',
+                alt: 'Image Preview',
+                type: 'file'
+            });
+
+            Object.assign(img1, {
+                id: 'showpic'
+            });
+
+            var textnode = document.createTextNode('SUBMIT');
+            submit_btn.appendChild(textnode);
+
+            //var children = [master1, master2, master3];
+            var textboxlabel = ['Name of Item:', 'Description:', 'Price (in HKD):', 'Upload Picture'];
+            var i = 0;
+
+            for (child of masters) {
+                master.append(textboxlabel[i]);
+                master.appendChild(child);
+                i = i + 1;
+            }
+
+            // master.appendChild(master4);
+            // master.appendChild(img1);
+            master.appendChild(submit_btn);
+            document.body.append(master);
+
+
+        }
+
+        var pic_input = document.getElementById('picfile');
+        pic_input.addEventListener('change', () => {
+            const file = pic_input.files[0];
+            console.log(file.name);
+
+            if (file) {
+                // const reader = new FileReader;
+
+                var display_pic = document.getElementById('showpic');
+                display_pic.src = URL.createObjectURL(file);
+
+                // reader.addEventListener('load', () => {
+                //     console.log(this);
+                //     document.getElementById('img1').setAttribute('src', this.result);
+                // });
+
+                // reader.readAsDataURL(file);
+            }
+
+        });
+
+
+    </script>
+</body>
+
+</html>

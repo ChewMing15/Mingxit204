@@ -8,7 +8,7 @@
 </head>
 <body id = 'page1'>
     <div id='h1tag'>
-        <p>Rich Ming</p>
+        <p>Welcome, <span id = 'welcomeid'></span></p>
 
         <a href='page1.html'>Page 1 </a>
         
@@ -17,9 +17,6 @@
         <button id='logout' onclick= "window.location.href = '/index.html';">LOGOUT</button>
     </div>
 
-    <div id = 'under_construction'>
-        Page is under construction
-    </div>
   
 
 </body>
@@ -35,12 +32,17 @@
         console.log(decode_JSON.grade);
 
         if (decode_JSON.grade == 'super') {
-            alert('You are a super user');
+            //alert('You are a super user');
             window.location.replace('/page2.html');
         } else {
             alert('Buy super user priviledge');
         }
     }
+
+    const decode = sessionStorage.getItem('user_cred');
+    const decode_JSON = JSON.parse(decode);
+    
+    document.getElementById('welcomeid').textContent = decode_JSON.user;
 
 </script>
 
