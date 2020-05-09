@@ -80,7 +80,6 @@
             master.appendChild(img1);
             master.appendChild(submit_btn);
             document.body.append(master);
-            
 
         }
 
@@ -89,77 +88,86 @@
             console.log('call_addpic got activated');
             var pic_input = document.getElementById('picfile');
 
-            // await pic_input.addEventListener('change', () => {
+            const file = pic_input.files[0];
+
+            const reader = new FileReader();
+            console.log(reader);
+            reader.onload = function() {
+                const img = new Image();
+                console.log('what about here inside reader');
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    canvas.height = img.height;
+                    canvas.width = img.width;
+                    const context = canvas.getContext('2d');
+                    context.drawImage(img, 0, 0);
+
+                    // const image_data = context.getImageData(0, 0, canvas.width, canvas.height);
+
+                    // const data = image_data.data;
+                    // for (i=0; i<data.length; i += 4) {
+                    //     const avg = (data[i] + data[i + 1] + data[i+2])/3
+
+                    //     data[i] = avg;
+                    //     data[i+1] = avg;
+                    //     data[i+2] = avg;
+                    // }
+
+                    // context.putImageData(image_data, 0, 0)
+                    document.body.append(canvas);
+                    // const csvfile = new Blob(['new, one, two'], {type: 'text/csv'})
+
+                    canvas.toBlob(async function (blob) {
+                        const form = new FormData();
+
+                        const decode = sessionStorage.getItem('user_cred');
+                        const decode_JSON = JSON.parse(decode);
+
+                        var check_cred = {
+                            user: decode_JSON.user,
+                            pass: decode_JSON.pass
+                        }
+
+                        form.append('image', blob, 'something_cool.jpg');
+                        form.append('check_cred', JSON.stringify(check_cred));
+
+                        const options = {
+                            method : "POST",
+                            body: form
+                        };
+
+                        const imgUpload = await fetch('/saveform', options)
+                        const confirmation = await imgUpload.json();
+
+                        console.log(confirmation.outcome);
+                    });
                 
-                // console.log('inside pic input');
-                const file = pic_input.files[0];
+                }
+                img.src = reader.result;
+              
+            };
 
-                const reader = new FileReader();
-                console.log(reader);
-                reader.onload = function() {
-                    const img = new Image();
-                    console.log('what about here inside reader');
-                    img.onload = function() {
-                        const canvas = document.createElement('canvas');
-                        canvas.height = img.height;
-                        canvas.width = img.width;
-                        const context = canvas.getContext('2d');
-                        context.drawImage(img, 0, 0);
-    
-                        // const image_data = context.getImageData(0, 0, canvas.width, canvas.height);
-
-                        // const data = image_data.data;
-                        // for (i=0; i<data.length; i += 4) {
-                        //     const avg = (data[i] + data[i + 1] + data[i+2])/3
-
-                        //     data[i] = avg;
-                        //     data[i+1] = avg;
-                        //     data[i+2] = avg;
-                        // }
-
-                        // context.putImageData(image_data, 0, 0)
-                        document.body.append(canvas);
-                        // const csvfile = new Blob(['new, one, two'], {type: 'text/csv'})
-
-                        canvas.toBlob(async function (blob) {
-                            const form = new FormData();
-                            form.append('image', blob, 'something_cool.jpg');
-    
-                            const options = {
-                                method : "POST",
-                                body: form
-                            };
-
-                            const imgUpload = await fetch('/saveform', options)
-                            const confirmation = await imgUpload.json();
-
-                            console.log(confirmation.outcome);
-                        });
-                        
-                    }
-                    img.src = reader.result;
-
-                };
-
-                reader.readAsDataURL(file);
-                
-            // });
-
+            reader.readAsDataURL(file);
+         
         }
 
         async function submit_form() {
             
             call_addpic();
-            
-            console.log('inside here already')
+
             var input1 = document.getElementById('itemname').value;
             var input2 = document.getElementById('item_description').value;
             var input3 = document.getElementById('price').value;
+            
+            const decode = sessionStorage.getItem('user_cred');
+            const decode_JSON = JSON.parse(decode);
 
             var final_input = {
                 name: input1,
                 description: input2,
-                price: input3
+                price: input3,
+                user: decode_JSON.user,
+                pass: decode_JSON.pass
             }
 
             const options1 = {
@@ -169,7 +177,10 @@
             }
 
             const sendData = await fetch('/saveform_part1', options1);
+
         }
+
+        
 
 
     </script>

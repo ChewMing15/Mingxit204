@@ -16,7 +16,8 @@ app.listen(port, ()=> {
 });
 
 const database = new Datastore('database.db');
-const database2 = new Datastore('database2.db')
+const database2 = new Datastore('database2.db');
+
 database.loadDatabase();
 database2.loadDatabase();
 
@@ -137,7 +138,7 @@ app.post(`/changerequest`, async (request, response) => {
 
 app.post('/saveform_part1', (request, response) => {
     var form_data = request.body;
-    console.log(form_data);
+    // console.log(form_data);
     database2.insert(form_data);
     
 });
@@ -152,10 +153,10 @@ const storage = multer.diskStorage({
 const upload = multer({
     storage: storage,
     limits:{fileSize: 10000000},
-    fileFilter: function(req, file, cb) {
-        checkfiletype(file, cb);
-    },
-}).single('image')
+    // fileFilter: function(req, file, cb) {
+    //     checkfiletype(file, cb);
+    // },
+}).fields([{name: 'image'}]);
 
 function checkfiletype (file, cb) {
     const fileExt = /jpeg|png|jpg/;
@@ -170,18 +171,28 @@ function checkfiletype (file, cb) {
 
 }
 
-app.post('/saveform', upload,(request, response ,err) => {
+app.post('/saveform', upload,(request, response) => {
+
+    console.log(request.files['image'][0]);
+    const img_text = request.body.check_cred;
+    const img_text_JSON = JSON.parse(img_text);
+    console.log(img_text_JSON);
 
     try {
-        if(request.file == undefined) {
+        if(request.files['image'][0] == undefined) {
             response.json({outcome: 'file not defined'});
         } else {
-            console.log(request.file);
-            console.log(request.file.filename);
+            const img_added = request.files['image'][0];
+
+            database2.update({user: img_text_JSON.user, pass: img_text_JSON.pass}, {$set: {path: img_added.path}}, {}, (err, numReplaced) => {
+                console.log('numreplaced:  ' + numReplaced);
+            });
+
             response.json({outcome: 'Success!'});
-            database2.insert(request.file.filename);
+         
         }
     } catch {
+        
         response.json({outcome: 'Something wrong'});
     }
 
