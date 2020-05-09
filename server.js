@@ -1,5 +1,8 @@
 const express = require('express');
 const Datastore = require('nedb');
+const multer = require('multer');
+const path = require('path');
+
 require('dotenv').config();
 
 const app = express();
@@ -13,7 +16,9 @@ app.listen(port, ()=> {
 });
 
 const database = new Datastore('database.db');
+const database2 = new Datastore('database2.db')
 database.loadDatabase();
+database2.loadDatabase();
 
 app.post(`/signUp`, async (request, response) => {
     const signup = request.body;
@@ -127,5 +132,57 @@ app.post(`/changerequest`, async (request, response) => {
             response.json({status: "something went wrong, please check"});
         }
     });
+
+});
+
+app.post('/saveform_part1', (request, response) => {
+    var form_data = request.body;
+    console.log(form_data);
+    database2.insert(form_data);
+    
+});
+
+const storage = multer.diskStorage({
+    destination: './uploads/',
+    filename: function(req, file, cb) {
+        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({
+    storage: storage,
+    limits:{fileSize: 10000000},
+    fileFilter: function(req, file, cb) {
+        checkfiletype(file, cb);
+    },
+}).single('image')
+
+function checkfiletype (file, cb) {
+    const fileExt = /jpeg|png|jpg/;
+    const ext_name = fileExt.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = fileExt.test(file.mimetype);
+
+    if(ext_name && mimetype) {
+        return cb(null, true);
+    } else {
+        return cb('Error', false);
+    }
+
+}
+
+app.post('/saveform', upload,(request, response ,err) => {
+
+    try {
+        if(request.file == undefined) {
+            response.json({outcome: 'file not defined'});
+        } else {
+            console.log(request.file);
+            console.log(request.file.filename);
+            response.json({outcome: 'Success!'});
+            database2.insert(request.file.filename);
+        }
+    } catch {
+        response.json({outcome: 'Something wrong'});
+    }
 
 });
