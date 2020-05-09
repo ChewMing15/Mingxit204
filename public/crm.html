@@ -13,7 +13,6 @@
     <button id='addItem' onclick='addfield()'>ADD</button>
     <button id='deleteItem' onclick='deleteItem()'>DELETE</button>
 
-    <!-- <input id='picfile' type='file' alt='Image Preview'> -->
     <img id='showpic'>
 
     <script>
@@ -66,7 +65,6 @@
             submit_btn.appendChild(textnode);
             submit_btn.setAttribute('onclick', 'submit_form()');
 
-            //var children = [master1, master2, master3];
             var textboxlabel = ['Name of Item:', 'Description:', 'Price (in HKD):', 'Upload Picture'];
             var i = 0;
 
@@ -83,54 +81,66 @@
 
         }
 
-        async function call_addpic() {
+        async function submit_form() {
             
-            console.log('call_addpic got activated');
+            // Get the <input type='file'> id
             var pic_input = document.getElementById('picfile');
-
+           
+            // Only 1 doc is uploaded, so this must be 0. Can do multi as well. Not covered in this program. 
             const file = pic_input.files[0];
+            console.log(file);
 
+            // just follow, not too sure
             const reader = new FileReader();
-            console.log(reader);
-            reader.onload = function() {
+
+            // load to load finish. REMEMBER! reader.readAsDataURL(file) must be after this function in order for the onload to get fired up. 
+            reader.onload = function () {
+
+                // put file into an image
                 const img = new Image();
                 console.log('what about here inside reader');
+
+                // start the code once the image has been loaded. REMEMBER! img.src = reader.result must be after this function in order for the onload to get fired up. 
                 img.onload = function() {
+                    // temporarily put it onto the canvas, because canvas can turn it into a blob. 
                     const canvas = document.createElement('canvas');
                     canvas.height = img.height;
                     canvas.width = img.width;
                     const context = canvas.getContext('2d');
+
+                    // draw image onto the canvas, starting from x=0, y=0 of the canvas. 
                     context.drawImage(img, 0, 0);
-
-                    // const image_data = context.getImageData(0, 0, canvas.width, canvas.height);
-
-                    // const data = image_data.data;
-                    // for (i=0; i<data.length; i += 4) {
-                    //     const avg = (data[i] + data[i + 1] + data[i+2])/3
-
-                    //     data[i] = avg;
-                    //     data[i+1] = avg;
-                    //     data[i+2] = avg;
-                    // }
-
-                    // context.putImageData(image_data, 0, 0)
                     document.body.append(canvas);
-                    // const csvfile = new Blob(['new, one, two'], {type: 'text/csv'})
 
+                    //turn canvas into a blob
                     canvas.toBlob(async function (blob) {
+
+                        //to send a blob back to server, easier to use FormData, then whatever text can also be filled in here
                         const form = new FormData();
 
+                        // get text input from the input field
+                        var input1 = document.getElementById('itemname').value;
+                        var input2 = document.getElementById('item_description').value;
+                        var input3 = document.getElementById('price').value;
+                        
+                        // initalization of sessionStorage (i.e. setItem) is in the index.html file. This is to pass information between different html pages . When setItem, stringify was used. 
                         const decode = sessionStorage.getItem('user_cred');
                         const decode_JSON = JSON.parse(decode);
 
+                        // mix user info with input text, so that it can be stored into database with identified. 
                         var check_cred = {
                             user: decode_JSON.user,
-                            pass: decode_JSON.pass
+                            pass: decode_JSON.pass,
+                            name: input1,
+                            description: input2,
+                            price: input3,
                         }
 
+                        //append both image and text into FormData
                         form.append('image', blob, 'something_cool.jpg');
                         form.append('check_cred', JSON.stringify(check_cred));
 
+                        // becuase FormData is special, that's why no need headers unlike the traditional post.
                         const options = {
                             method : "POST",
                             body: form
@@ -141,49 +151,38 @@
 
                         console.log(confirmation.outcome);
                     });
-                
+
+                    
                 }
+               
                 img.src = reader.result;
-              
-            };
-
+            }
             reader.readAsDataURL(file);
-         
         }
-
-        async function submit_form() {
-            
-            call_addpic();
-
-            var input1 = document.getElementById('itemname').value;
-            var input2 = document.getElementById('item_description').value;
-            var input3 = document.getElementById('price').value;
-            
-            const decode = sessionStorage.getItem('user_cred');
-            const decode_JSON = JSON.parse(decode);
-
-            var final_input = {
-                name: input1,
-                description: input2,
-                price: input3,
-                user: decode_JSON.user,
-                pass: decode_JSON.pass
-            }
-
-            const options1 = {
-                method: "POST",
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(final_input) 
-            }
-
-            const sendData = await fetch('/saveform_part1', options1);
-
-        }
-
-        
-
-
     </script>
 </body>
 
 </html>
+<!-- // async function call_addpic() {
+   
+    // const image_data = context.getImageData(0, 0, canvas.width, canvas.height);
+
+    // const data = image_data.data;
+    // for (i=0; i<data.length; i += 4) {
+    //     const avg = (data[i] + data[i + 1] + data[i+2])/3
+
+    //     data[i] = avg;
+    //     data[i+1] = avg;
+    //     data[i+2] = avg;
+    // }
+
+    // context.putImageData(image_data, 0, 0)
+    
+    // const csvfile = new Blob(['new, one, two'], {type: 'text/csv'})
+
+
+// }
+            
+-->
+
+        

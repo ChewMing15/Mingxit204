@@ -1,7 +1,9 @@
 const express = require('express');
 const Datastore = require('nedb');
+
+// Multer allows for uploading of blob, install using npm install --save multer 
 const multer = require('multer');
-const path = require('path');
+const path = require('path'); //path is a build in function
 
 require('dotenv').config();
 
@@ -21,13 +23,16 @@ const database2 = new Datastore('database2.db');
 database.loadDatabase();
 database2.loadDatabase();
 
+// Corresponding page is signup.html
 app.post(`/signUp`, async (request, response) => {
     const signup = request.body;
     signup.grade = 'normal';
     console.log(signup);
 
+    //NEDB syntax to find existing entries in database
     await database.find({SUuser: signup.SUuser, SUpass: signup.SUpass}, (err, docs) => {
 
+        // if docs.legth > 0, then that means there's data. Docs are in JSON format and must specific the [0] element. Refer to the /LogIn fetch function to see.
         console.log(docs)
         if (docs.length == 0) {
             database.insert(signup);
@@ -39,6 +44,7 @@ app.post(`/signUp`, async (request, response) => {
 
 });
 
+// Corresponding page is index.html (sign in page)
 app.post(`/LogIn`, async (request, response) => {
     const login = request.body;
     const login_user = login.login_user;
@@ -46,6 +52,7 @@ app.post(`/LogIn`, async (request, response) => {
 
     console.log('user: ' + login_user + 'login_pass: ' + login_pass);
 
+    // Compare user input username and password with database. If match, then doc will return 1. 
     await database.find({ SUuser: login_user, SUpass: login_pass}, (err, docs, K) => {
 
         if (docs.length == 1) {
@@ -63,6 +70,7 @@ app.post(`/LogIn`, async (request, response) => {
     });
 });
 
+// Corresponding page is page2.html (user access control page), blank find and send back to html page
 app.get('/getDatabase', (request, response) => {
     
     database.find({}, (err, docs) => {
@@ -76,6 +84,7 @@ app.get('/getDatabase', (request, response) => {
     });
 });
 
+// Corresponding page is page2.html (user access control page). Use this to control username/password/grade change or delete user. 
 app.post(`/changerequest`, async (request, response) => {
     const VO = request.body;
     const VO_grade = VO.getOriGrade;
@@ -85,14 +94,13 @@ app.post(`/changerequest`, async (request, response) => {
     const VO_type = VO.change_type;
     const VO_val = VO.change_val;
     
-    // findChanges_user = findChanges_json.getOriUser;
-    // console.log(findChanges_user);
     await database.find({SUuser: VO_user, SUpass: VO_pass, grade: VO_grade}, (err, docs) => {
         
         if(docs.length == 1) {
 
             if (VO_type == 'delete') {
 
+                // Syntax to remove database
                 database.remove({SUuser: VO_user, SUpass: VO_pass}, {}, (err, numRemoved) => {
                     console.log(numRemoved);
                 });
@@ -102,7 +110,8 @@ app.post(`/changerequest`, async (request, response) => {
             } else {
 
                 if (VO_type == 'username') {
-                
+                    
+                    // Syntax to update entry. Can also use do $set and set multiple with comma in between to slot more info into that slot. numreplace is the number of entry replace, expect 1 most of the time. 
                     database.update({SUuser: VO_user, SUpass: VO_pass}, {$set: {grade: VO_val}}, {}, (err, numReplaced) => {
                         console.log('numreplaced:  ' + numReplaced);
                     });
@@ -136,13 +145,7 @@ app.post(`/changerequest`, async (request, response) => {
 
 });
 
-app.post('/saveform_part1', (request, response) => {
-    var form_data = request.body;
-    // console.log(form_data);
-    database2.insert(form_data);
-    
-});
-
+// Multer: Specify where is this going to be show. This is the path to where the image file will be saved. Database will only save the path.
 const storage = multer.diskStorage({
     destination: './uploads/',
     filename: function(req, file, cb) {
@@ -150,14 +153,16 @@ const storage = multer.diskStorage({
     }
 });
 
+// Multer: Specify what you are uploading. Note that field> name is the name given when appending image to FormData. 
 const upload = multer({
     storage: storage,
     limits:{fileSize: 10000000},
-    // fileFilter: function(req, file, cb) {
-    //     checkfiletype(file, cb);
-    // },
+    fileFilter: function(req, file, cb) {
+        checkfiletype(file, cb);
+    },
 }).fields([{name: 'image'}]);
 
+// Multer: To check if image is of the right file extension
 function checkfiletype (file, cb) {
     const fileExt = /jpeg|png|jpg/;
     const ext_name = fileExt.test(path.extname(file.originalname).toLowerCase());
@@ -171,9 +176,13 @@ function checkfiletype (file, cb) {
 
 }
 
+// Multer: The usual fetch-post after the 2 multer set up above. 
 app.post('/saveform', upload,(request, response) => {
 
+    //read from upload, first image file
     console.log(request.files['image'][0]);
+
+    //text appended after image in DataForm is considered as body. we turned the check_cred into text before fitting it into the DataForm
     const img_text = request.body.check_cred;
     const img_text_JSON = JSON.parse(img_text);
     console.log(img_text_JSON);
@@ -184,11 +193,16 @@ app.post('/saveform', upload,(request, response) => {
         } else {
             const img_added = request.files['image'][0];
 
-            database2.update({user: img_text_JSON.user, pass: img_text_JSON.pass}, {$set: {path: img_added.path}}, {}, (err, numReplaced) => {
-                console.log('numreplaced:  ' + numReplaced);
-            });
+            //combining the image file details and the text bit
+            const combine = {
+                head: img_added,
+                body: img_text_JSON
+            }
 
+            database2.insert(combine);
+  
             response.json({outcome: 'Success!'});
+            console.log(combine.body.description); //example on how to access the database tree (just like JSON)
          
         }
     } catch {
