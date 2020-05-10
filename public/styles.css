@@ -131,6 +131,36 @@
     background-color: hotpink;
   }
 
+  #mastercontainer {
+    display: flex;
+    /* grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    grid-template-areas: 
+    "box2 box1" */
+    flex-direction: row;
+    border-bottom-width: 0.75px;
+    border-bottom-style: solid;
+    border-bottom-color: black;
+    padding-top: 30px;
+    padding-bottom: 20px;
+  }
+
+  #text_wrap {
+    grid-area: box1;
+    display: flex;
+    flex-direction: column;
+    padding-left: 20px;
+    font-size: 25px;
+    font-family: 'Helvetica Neue';
+  }
+  
+  #image_wrap img {
+    grid-area: box2;
+    width: 350px;
+    height: auto;
+  }
+
+
   #h1tag {
     
     border-style: none none solid none;

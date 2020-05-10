@@ -112,13 +112,13 @@ app.post(`/changerequest`, async (request, response) => {
                 if (VO_type == 'username') {
                     
                     // Syntax to update entry. Can also use do $set and set multiple with comma in between to slot more info into that slot. numreplace is the number of entry replace, expect 1 most of the time. 
-                    database.update({SUuser: VO_user, SUpass: VO_pass}, {$set: {grade: VO_val}}, {}, (err, numReplaced) => {
+                    database.update({SUuser: VO_user, SUpass: VO_pass}, {$set: {SUuser: VO_val}}, {}, (err, numReplaced) => {
                         console.log('numreplaced:  ' + numReplaced);
                     });
                     
                 } else if (VO_type == 'password') {
 
-                    database.update({SUuser: VO_user, SUpass: VO_pass}, {$set: {grade: VO_val}}, {}, (err, numReplaced) => {
+                    database.update({SUuser: VO_user, SUpass: VO_pass}, {$set: {Supass: VO_val}}, {}, (err, numReplaced) => {
                         console.log('numreplaced:  ' + numReplaced);
                     });
 

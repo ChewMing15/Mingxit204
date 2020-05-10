@@ -64,17 +64,24 @@
             desc_div = document.createElement('desc');
             price_div = document.createElement('price');
             image_div = document.createElement('img');
+            image_wrap = document.createElement('div');
+            text_wrap = document.createElement('div');
+            user_div = document.createElement('div');
             
             master.setAttribute('id', 'mastercontainer');
             container.setAttribute('id', 'container');
             name_div.setAttribute('id', 'name_div');
             desc_div.setAttribute('id', 'desc_div');
+            text_wrap.setAttribute('id', 'text_wrap');
             price_div.setAttribute('id', 'price_div');
+            image_wrap.setAttribute('id', 'image_wrap');
             image_div.setAttribute('id', 'image_div');
+            user_div.setAttribute('id', 'user_div');
 
-            name_div.textContent = getpost.body.name;
-            desc_div.textContent = getpost.body.description;
-            price_div.textContent = getpost.body.price;
+            name_div.textContent = 'Item name: ' + getpost.body.name;
+            desc_div.textContent = 'Item description: ' + getpost.body.description;
+            price_div.textContent = 'Price (USD): ' + getpost.body.price;
+            user_div.textContent = 'Uploaded by: ' + getpost.body.user;
            
             const header = getpost.head.filename;
             const clearSRC = 'uploads/' + header;
@@ -83,11 +90,15 @@
 
             image_div.setAttribute('src', clearSRC);
 
-            master.appendChild(name_div);
-            master.appendChild(desc_div);
-            master.appendChild(price_div);
+            text_wrap.appendChild(name_div);
+            text_wrap.appendChild(desc_div);
+            text_wrap.appendChild(price_div);
+            text_wrap.appendChild(user_div);
+            image_wrap.appendChild(image_div);
 
-            master.appendChild(image_div);
+            master.appendChild(image_wrap);
+            master.appendChild(text_wrap);
+            
             document.body.append(master);
 
 
