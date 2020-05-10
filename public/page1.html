@@ -15,34 +15,85 @@
         <button onclick="check_status()"> Admin </button>
 
         <button id='logout' onclick= "window.location.href = '/index.html';">LOGOUT</button>
+
+        
     </div>
 
+    <!-- <img src='uploads/image-1589091593403.jpg'> -->
   
+    <script>    
+        function check_status() {
+    
+            const decode = sessionStorage.getItem('user_cred');
+            const decode_JSON = JSON.parse(decode);
 
-</body>
+            console.log(decode_JSON);
+            console.log(decode_JSON.grade);
 
-<script>    
-    function check_status() {
- 
+            if (decode_JSON.grade == 'super') {
+                //alert('You are a super user');
+                window.location.replace('/page2.html');
+            } else {
+                alert('Buy super user priviledge');
+            }
+        }
+
         const decode = sessionStorage.getItem('user_cred');
         const decode_JSON = JSON.parse(decode);
+        
+        document.getElementById('welcomeid').textContent = decode_JSON.user;
 
-        console.log(decode_JSON);
-        console.log(decode_JSON.grade);
+        gogetpost();
 
-        if (decode_JSON.grade == 'super') {
-            //alert('You are a super user');
-            window.location.replace('/page2.html');
-        } else {
-            alert('Buy super user priviledge');
+        async function gogetpost(){
+            var getpost_data = await fetch('/getpost')
+            var getpost = await getpost_data.json();
+
+            // console.log(getpost.length);
+
+            for (i=0; i<getpost.length; i++){
+                createHTML(getpost[i]);
+                // console.log('came in here')
+            }
         }
-    }
 
-    const decode = sessionStorage.getItem('user_cred');
-    const decode_JSON = JSON.parse(decode);
-    
-    document.getElementById('welcomeid').textContent = decode_JSON.user;
+        function createHTML(getpost) {
+            master = document.createElement('div');
+            container = document.createElement('div');
+            name_div = document.createElement('name');
+            desc_div = document.createElement('desc');
+            price_div = document.createElement('price');
+            image_div = document.createElement('img');
+            
+            master.setAttribute('id', 'mastercontainer');
+            container.setAttribute('id', 'container');
+            name_div.setAttribute('id', 'name_div');
+            desc_div.setAttribute('id', 'desc_div');
+            price_div.setAttribute('id', 'price_div');
+            image_div.setAttribute('id', 'image_div');
 
-</script>
+            name_div.textContent = getpost.body.name;
+            desc_div.textContent = getpost.body.description;
+            price_div.textContent = getpost.body.price;
+           
+            const header = getpost.head.filename;
+            const clearSRC = 'uploads/' + header;
+
+            console.log(clearSRC);
+
+            image_div.setAttribute('src', clearSRC);
+
+            master.appendChild(name_div);
+            master.appendChild(desc_div);
+            master.appendChild(price_div);
+
+            master.appendChild(image_div);
+            document.body.append(master);
+
+
+        }
+    </script>
+</body>
+
 
 </html>

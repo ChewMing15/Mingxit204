@@ -147,7 +147,7 @@ app.post(`/changerequest`, async (request, response) => {
 
 // Multer: Specify where is this going to be show. This is the path to where the image file will be saved. Database will only save the path.
 const storage = multer.diskStorage({
-    destination: './uploads/',
+    destination: './public/uploads/',
     filename: function(req, file, cb) {
         cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
     }
@@ -209,5 +209,19 @@ app.post('/saveform', upload,(request, response) => {
         
         response.json({outcome: 'Something wrong'});
     }
+
+});
+
+app.get('/getpost', (request, response) => {
+
+    database2.find({}, (err, docs) => {
+        if (err) {
+            response.end();
+            console.log('problem');
+            return;
+        }
+
+        response.json(docs);
+    });
 
 });
